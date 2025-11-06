@@ -1,0 +1,3 @@
+SRC="/home/reza/Downloads/Persepolis/Videos/movies" \
+DEST="/home/reza/hls_output" \
+/home/reza/HLS_project/run_hls.sh --hw-encoder auto

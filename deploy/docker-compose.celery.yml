@@ -1,0 +1,30 @@
+services:
+  redis:
+    image: redis:7
+    ports:
+      # If 6379 is busy on host, change to "6380:6379"
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  worker:
+    image: python:3.11-slim
+    working_dir: /app
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_BACKEND_URL=redis://redis:6379/0
+      - PYTHONPATH=/app
+      - APP_ROOT=/app
+    volumes:
+      - /home/reza/HLS_project:/app
+      # Make host source and output paths visible inside the container at the same absolute paths
+      - /home/reza/Downloads/Persepolis/Videos/movies:/home/reza/Downloads/Persepolis/Videos/movies:ro
+      - /home/reza/HLS_output:/home/reza/HLS_output
+    command: bash -lc "apt-get update && apt-get install -y ffmpeg && pip install -r requirements.txt && celery -A hls.orchestrator worker -l info"
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped

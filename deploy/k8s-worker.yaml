@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hls-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hls-worker
+  template:
+    metadata:
+      labels:
+        app: hls-worker
+    spec:
+      containers:
+        - name: worker
+          image: python:3.11-slim
+          command: ["bash", "-lc", "pip install -r requirements.txt && celery -A hls.orchestrator worker -l info"]
+          env:
+            - name: CELERY_BROKER_URL
+              value: redis://redis:6379/0
+          volumeMounts:
+            - name: app
+              mountPath: /app
+      volumes:
+        - name: app
+          hostPath:
+            path: /home/reza/HLS_project
+            type: Directory
