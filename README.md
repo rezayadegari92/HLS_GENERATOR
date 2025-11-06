@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # HLS Generator
 
 Generate adaptive HLS (HTTP Live Streaming) outputs from a movie library. The tool scans your movies folder, produces per-resolution HLS playlists and segments, and builds a master playlist for adaptive streaming.
@@ -168,3 +169,6 @@ python3 hls_generator_v2.py \
   --variant-workers 3 \
   --thumb-interval 20
 ```
+=======
+# HLS_GENERATOR
+>>>>>>> 95ac836a93f85b8c1fd34774dfdebb3960f96943
